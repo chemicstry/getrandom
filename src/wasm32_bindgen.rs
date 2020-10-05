@@ -49,7 +49,9 @@ pub fn getrandom_inner(dest: &mut [u8]) -> Result<(), Error> {
                 // > A QuotaExceededError DOMException is thrown if the
                 // > requested length is greater than 65536 bytes.
                 for chunk in dest.chunks_mut(65536) {
-                    n.get_random_values(chunk)
+                    let arr = js_sys::Uint8Array::new_with_length(chunk.len() as u32);
+                    n.get_random_values(&arr);
+                    arr.copy_to(chunk);
                 }
             }
         };
@@ -102,7 +104,7 @@ extern "C" {
     #[wasm_bindgen(method, js_name = getRandomValues, structural, getter)]
     fn get_random_values_fn(me: &BrowserCrypto) -> JsValue;
     #[wasm_bindgen(method, js_name = getRandomValues, structural)]
-    fn get_random_values(me: &BrowserCrypto, buf: &mut [u8]);
+    fn get_random_values(me: &BrowserCrypto, buf: &js_sys::Uint8Array);
 
     #[derive(Clone, Debug)]
     type NodeCrypto;

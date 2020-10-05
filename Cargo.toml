@@ -29,6 +29,7 @@ libc = { version = "0.2.64", default-features = false }
 wasi = "0.9"
 
 [target.wasm32-unknown-unknown.dependencies]
+js-sys = "0.3"
 wasm-bindgen = { version = "0.2.29", optional = true }
 stdweb = { version = "0.4.18", optional = true }
 
